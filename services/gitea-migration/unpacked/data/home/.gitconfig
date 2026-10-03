@@ -1,0 +1,36 @@
+[user]
+	name = Gitea
+	email = gitea@fake.local
+[core]
+	quotePath = false
+	commitGraph = true
+	logallrefupdates = true
+[receive]
+	advertisePushOptions = true
+	procReceiveRefs = refs/for
+[transfer]
+	fsckObjects = true
+[fsck]
+	badTimezone = ignore
+	missingSpaceBeforeDate = ignore
+	zeroPaddedFilemode = ignore
+[fetch "fsck"]
+	badTimezone = ignore
+	missingSpaceBeforeDate = ignore
+	zeroPaddedFilemode = ignore
+[receive "fsck"]
+	badTimezone = ignore
+	missingSpaceBeforeDate = ignore
+	zeroPaddedFilemode = ignore
+[gc]
+	writeCommitGraph = true
+	reflogexpire = 90
+[fetch]
+	writeCommitGraph = true
+[safe]
+	directory = *
+[uploadpack]
+	allowfilter = true
+	allowAnySHA1InWant = true
+[diff]
+	algorithm = histogram
