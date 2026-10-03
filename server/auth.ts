@@ -21,7 +21,7 @@ async function userById(db: Database | DatabaseTransaction, id: number): Promise
     email: user.email,
     displayName: user.display_name,
     roles: roleRow?.roles ? String(roleRow.roles).split(',') : [],
-    mustChangePassword: !!user.m,
+    mustChangePassword: user.m === true || Number(user.m) === 1,
   };
 }
 
@@ -58,7 +58,7 @@ async function recordLoginAttempt(db: Database, email: string, ip: string | unde
 
 async function startSession(db: Database, userId: number, remember: boolean, ip?: string, ua?: string) {
   const token = randomBytes(32).toString('base64url');
-  const maxAgeSec = remember ? 30 * 86400 : 86400;
+  const maxAgeSec = remember ? 365 * 86400 : 86400;
   await db.transaction(async (tx) => {
     const active = await tx.prepare("SELECT 1 FROM users WHERE id = ? AND status = 'active'").get(userId);
     if (!active) throw new Error('account is not active');
@@ -131,7 +131,8 @@ export async function getSession(db: Database, token: string | undefined): Promi
   const session = await db.prepare(`SELECT user_id FROM sessions
     WHERE id = ? AND revoked_at IS NULL AND expires_at > strftime('%Y-%m-%dT%H:%M:%fZ','now')`).get(hash);
   if (!session) return null;
-  await db.prepare("UPDATE sessions SET last_seen_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?").run(hash);
+  // Keep a remembered session alive for a full year while it is being used.
+  await db.prepare("UPDATE sessions SET last_seen_at = strftime('%Y-%m-%dT%H:%M:%fZ','now'), expires_at = CASE WHEN expires_at < strftime('%Y-%m-%dT%H:%M:%fZ','now','+30 days') THEN strftime('%Y-%m-%dT%H:%M:%fZ','now','+365 days') ELSE expires_at END WHERE id = ?").run(hash);
   return userById(db, Number(session.user_id));
 }
 

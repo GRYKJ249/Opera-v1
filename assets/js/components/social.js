@@ -93,7 +93,7 @@ export function initSocial() {
         return;
     fetch('/api/auth/me', { credentials: 'same-origin' }).then(r => r.ok ? r.json() : null).then(j => { if (j?.user)
         acct.hidden = false; }).catch(() => { });
-    out.onclick = async () => { await post('/api/auth/logout'); location.reload(); };
+    out.onclick = async () => { await post('/api/auth/logout'); location.href = '/'; };
     add.onclick = async () => {
         if (!window.PublicKeyCredential || !navigator.credentials)
             return say('unsupported');

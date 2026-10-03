@@ -6,7 +6,7 @@
     "build": "tsc -p config/tsconfig.json",
     "watch": "tsc -p config/tsconfig.json -w",
     "start": "node --no-warnings --env-file-if-exists=.env server/serve.ts",
-    "db:test": "node --no-warnings server/db-postgres.test.ts",
+    "db:test": "node --experimental-strip-types --no-warnings --env-file-if-exists=.env server/db-postgres.test.ts",
     "oauth:check": "node --no-warnings --env-file=.env server/oauth-check.ts",
     "mail:test": "node --no-warnings --env-file=.env server/mail-test.ts",
     "db:init": "node --no-warnings server/init.ts",

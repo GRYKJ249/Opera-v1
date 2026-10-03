@@ -73,7 +73,7 @@ export function initSocial(): void {
   const acct = document.getElementById('lgacct'), add = document.getElementById('lgpk') as HTMLButtonElement | null, out = document.getElementById('lgout') as HTMLButtonElement | null;
   if (!acct || !add || !out) return;
   fetch('/api/auth/me', { credentials: 'same-origin' }).then(r => r.ok ? r.json() : null).then(j => { if (j?.user) acct.hidden = false; }).catch(() => { /* لا يوجد خادم */ });
-  out.onclick = async () => { await post('/api/auth/logout'); location.reload(); };
+  out.onclick = async () => { await post('/api/auth/logout'); location.href = '/'; };
   add.onclick = async () => {
     if (!window.PublicKeyCredential || !navigator.credentials) return say('unsupported');
     busy(add, true); msg.textContent = '';

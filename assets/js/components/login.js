@@ -86,8 +86,12 @@ export function initLogin() {
         msg.textContent = t(vq === '1' ? 'تم تأكيد بريدك. سجّل الدخول الآن.' : 'رابط التأكيد غير صالح أو منتهي.');
     // إن كانت هناك جلسة فعّالة نرحّب باسم المستخدم (فشل الطلب لا يهم)
     fetch('/api/auth/me', { credentials: 'same-origin' }).then(r => r.ok ? r.json() : null).then(j => {
-        if (j?.user && sub)
-            sub.textContent = t('أهلاً بعودتك يا {n}.').replace('{n}', j.user.displayName || j.user.email.split('@')[0]);
+        if (j?.user) {
+            if (sub)
+                sub.textContent = t('أهلاً بعودتك يا {n}.').replace('{n}', j.user.displayName || j.user.email.split('@')[0]);
+            if (!location.search.includes('force_login=1'))
+                location.replace('../index.html');
+        }
     }).catch(() => { });
     em.addEventListener('input', () => { if (valid())
         touched = true; paintEmail(); suggest(); msg.textContent = ''; });
