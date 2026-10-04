@@ -294,8 +294,7 @@ function proxyGitea(req: IncomingMessage, res: ServerResponse, me: { id: number;
         upstreamRes.on('data', (chunk: Buffer) => chunks.push(chunk));
         upstreamRes.on('end', () => {
           const html = Buffer.concat(chunks).toString('utf8')
-            .replace(/(\/git\/assets\/(?:css|js)\/[^"'?]+)(?=["'])/g, '$1?opera_cache=2')
-            .replace('<a class="item" href="/git/explore/repos">Explore</a>', '<a class="item" href="/git/explore/repos">Explore</a><a class="item" href="/cloud/">Cloud</a>');
+            .replace(/(\/git\/assets\/(?:css|js)\/[^"'?]+)(?=["'])/g, '$1?opera_cache=2');
           res.writeHead(upstreamRes.statusCode ?? 502, outHeaders);
           res.end(html);
           resolve();
